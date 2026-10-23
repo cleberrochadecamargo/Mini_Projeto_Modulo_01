@@ -322,6 +322,8 @@ def exportar_metricas_csv(
         receita_geral,
         caminho="outputs/metricas_resumo.csv"
 ):
+    # A função recebe os resultados calculados anteriormente e o caminho
+    # onde salvará o arquivo.
     
     Path(caminho).parent.mkdir(parents=True, exist_ok=True)
     # Path(caminho) = representa o caminho do arquivo.
@@ -342,5 +344,54 @@ def exportar_metricas_csv(
             escritor.writerow(["regiao", regiao, round(receita, 2)])
 
         escritor.writerow(["geral", "Total", round(receita_geral, 2)])
+    # Os laços "for" percorrem os dicionários de categorias e regiões. Depois,
+    # a última linha registra a receita geral.
 
     print(f"\nArquivo CSV exportado: {caminho}")
+
+
+    ## EXPORTAR AS ESTATÍSTICAS DE VENDAS PARA UM ARQUIVO JSON.
+def exportar_estatisticas_json(
+    receita_categoria,
+    receita_regiao,
+    receita_geral,
+    segmentos,
+    caminho="outputs/estatisticas.json"
+):
+
+    import json
+    # Importa a biblioteca padrão que permite trabalhar com JSON.
+
+    Path(caminho).parent.mkdir(parents=True, exist_ok=True)
+
+    estatisticas = {
+        "receita_por_categoria": {
+            categoria: round(receita, 2)
+            for categoria, receita in receita_categoria.items()
+        },
+        "receita_por_regiao": {
+            regiao: round(receita, 2)
+            for regiao, receita in receita_regiao.items()
+        },
+        "receita_geral": round(receita_geral, 2),
+        "quantidade_clientes": len(segmentos),
+        "segmentos_clientes": segmentos
+    }
+    # estatisticas = {...} = organiza os resultados em um dicionário.
+    # len(segmentos) = conta quantos clientes foram segmentados.
+    # categoria: round(receita, 2) = arredonda os valores para duas casas decimais.
+    # for categoria, receita in receita_categoria.items()= percorre cada par de
+    # categoria e receita do dicionário original.
+
+    with open(caminho, mode="w", encoding="utf-8") as arquivo:
+        json.dump(
+            estatisticas,
+            arquivo,
+            ensure_ascii=False,
+            indent=4
+        )
+    # json.dump(...) = grava os dados no arquivo.
+    # ensure_ascii=False = preserva caracteres como Eletrônicos.
+    # indent=4 = deixa o arquivo organizado e fácil de ler.
+
+    print(f"Arquivo JSON exportado: {caminho}")

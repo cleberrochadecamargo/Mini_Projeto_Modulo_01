@@ -37,4 +37,11 @@ if __name__ == "__main__":
     segmentos = mv.segmentar_clientes(registros_analisados)
     # A variável segmentos guardará o resultado da classificação.
 
+    mv.exportar_estatisticas_json(
+    receita_categoria,
+    receita_regiao,
+    receita_geral,
+    segmentos
+)
+
 
