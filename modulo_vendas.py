@@ -313,3 +313,34 @@ def segmentar_clientes(registros):
         )
 
     return segmentos
+
+
+    ## EXPORTAR OS RESUMOS DE RECEITA PARA UM ARQUIVO CSV.
+def exportar_metricas_csv(
+        receita_categoria,
+        receita_regiao,
+        receita_geral,
+        caminho="outputs/metricas_resumo.csv"
+):
+    
+    Path(caminho).parent.mkdir(parents=True, exist_ok=True)
+    # Path(caminho) = representa o caminho do arquivo.
+    # .parent = obtém a pasta que contém o arquivo, neste caso outputs.
+    # mkdir(...) = cria essa pasta, se necessário.
+    # exist_ok=True = evita erro caso a pasta já exista.
+
+    with open(caminho, mode="w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.writer(arquivo)
+
+        escritor.writerow(["tipo", "nome", "receita"])
+    # Define as três colunas, escrever o cabeçalho.
+
+        for categoria, receita in receita_categoria.items():
+            escritor.writerow(["categoria", categoria, round(receita, 2)])
+
+        for regiao, receita in receita_regiao.items():
+            escritor.writerow(["regiao", regiao, round(receita, 2)])
+
+        escritor.writerow(["geral", "Total", round(receita_geral, 2)])
+
+    print(f"\nArquivo CSV exportado: {caminho}")

@@ -17,7 +17,17 @@ if __name__ == "__main__":
     registros_analisados = mv.calcular_metricas(registros_limpos)
     # recebe essa mesma lista com os novos campos receita_total e faixa_preco.
 
-    mv.resumir_vendas(registros_analisados)
+    receita_categoria, receita_regiao, receita_geral = (
+        mv.resumir_vendas(registros_analisados)
+    )
+
+    segmentos = mv.segmentar_clientes(registros_analisados)
+
+    mv.exportar_metricas_csv(
+        receita_categoria,
+        receita_regiao,
+        receita_geral
+    )
 
     print("\nExemplos de vendas analisadas")
     print(registros_analisados[0])
